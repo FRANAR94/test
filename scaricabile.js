@@ -129,45 +129,48 @@ const jobs = [
 
 
 function trovaIns(a, b) {
-  //creo una lista vuta che conterà ilrisultato della ricerca e una var conteggio
-  let result = [];
-  let count = 0;
-
-  //itero un array di oggetti con una condizione case insensitive che nel caso trova un elemento corrispondende mi aumenta di 1 il contatore mi aggunge l'elemento trovato alla lista 
+  let risultato = {
+  result: [],
+  count: 0,
+  }
   for (let elem of jobs) {
       if (elem.title.toLowerCase().includes(a.toLowerCase()) && elem.location.toLowerCase().includes(b.toLowerCase())) {
-          count += 1;
-          result.push(elem);
+          risultato.count +=1;
+          risultato.result.push(elem);
       }
   }
-
-  //seleziono un elemento di html che conterra il risultato di coneggio
-  let cont = document.querySelector("#conteggio");
-  cont.innerText = "trovate: " + count + " inserzioni";
-  
-  //seleziono un ul presente in html che conterra una lista di array trovati 
-  let ul = document.querySelector(".risultati");
-  ul.innerHTML = "";
-
-  //itero l'array di risultati e stampoogni elemento dell'array in un li
-  for(let elem of result){
-    let li = document.createElement("li");
-    li.classList.toggle("li");
-    li.innerText = elem.title + " " + elem.location;
-    ul.appendChild(li);
-  }
-  
+  return risultato; 
 }
 
-//prendo gli input dell'utente e il bottone
-let lav = document.querySelector("#lavoro");
-let loc = document.querySelector("#nazione");
 let btn = document.querySelector("#cerca");
 
-//creo un evento che al click del bottone mi assegna gli input a due variabili che passero alla funzione trovains
 btn.addEventListener('click', () => {
+
+  let lav = document.querySelector("#lavoro");
+  let loc = document.querySelector("#nazione");
+
   let lavoro = lav.value;
   let localita = loc.value;
-  trovaIns(lavoro,localita);
+
+  let ris = trovaIns(lavoro, localita);
+
+  let cont = document.querySelector("#conteggio");
+  cont.innerText = "Trovati: " + ris.count + " Annunci";
+ 
+  let ul = document.querySelector(".risultati");
+  ul.innerHTML = ""; 
+  
+  for(let elem of ris.result){
+    let li = document.createElement("li");
+    li.classList.add("li");
+    li.innerHTML = `<p><b>Profilo:</b> ${elem.title} <br><br> <b>Località:</b> ${elem.location}</p>`;
+    ul.appendChild(li);
+  } 
+  lav.value = "";
+  loc.value = "";
 })
 
+
+
+
+  
